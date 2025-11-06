@@ -1,0 +1,44 @@
+-- Tabla de héroes
+CREATE TABLE heroes (
+    id INTEGER PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    clase TEXT NOT NULL,
+    nivel_experiencia INTEGER NOT NULL CHECK(nivel_experiencia >= 1)
+);
+
+-- Tabla de misiones
+CREATE TABLE misiones (
+    id INTEGER PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    nivel_dificultad INTEGER NOT NULL CHECK(nivel_dificultad BETWEEN 1 AND 10),
+    localizacion TEXT,
+    recompensa INTEGER NOT NULL CHECK(recompensa >= 0)
+);
+
+-- Tabla de monstruos
+CREATE TABLE monstruos (
+    id INTEGER PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    tipo TEXT NOT NULL,
+    nivel_amenaza INTEGER NOT NULL CHECK(nivel_amenaza BETWEEN 1 AND 10)
+);
+
+-- Relación héroes ↔ misiones
+CREATE TABLE misiones_heroes (
+    id INTEGER PRIMARY KEY,
+    id_heroe INTEGER NOT NULL,
+    id_mision INTEGER NOT NULL,
+    FOREIGN KEY (id_heroe) REFERENCES heroes(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_mision) REFERENCES misiones(id) ON DELETE CASCADE,
+    UNIQUE(id_heroe, id_mision)
+);
+
+-- Relación misiones ↔ monstruos
+CREATE TABLE misiones_monstruos (
+    id INTEGER PRIMARY KEY,
+    id_mision INTEGER NOT NULL,
+    id_monstruo INTEGER NOT NULL,
+    FOREIGN KEY (id_mision) REFERENCES misiones(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_monstruo) REFERENCES monstruos(id) ON DELETE CASCADE,
+    UNIQUE(id_mision, id_monstruo)
+);
